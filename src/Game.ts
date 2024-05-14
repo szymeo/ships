@@ -120,8 +120,8 @@ export class Game {
 
                 this._changedSquares.add(this._getIndexOfSquare(i, j));
                 this._board.set(this._getIndexOfSquare(i, j), newBoardMemberType);
-                this._markForbiddenSquares(i, j, newBoardMemberType);
                 this._boardDirty.push([i, j]);
+                this._markForbiddenSquares();
                 this._redrawBoard();
             }
         }
@@ -150,11 +150,11 @@ export class Game {
                     [BoardMember.SHIP]: BoardMember.EMPTY,
                     [BoardMember.FORBIDDEN]: BoardMember.SHIP,
                 })(oldBoardMemberType);
-                this._markForbiddenSquares(i, j, newBoardMemberType);
-
                 this._board.set(this._getIndexOfSquare(i, j), newBoardMemberType);
                 this._changedSquares.add(this._getIndexOfSquare(i, j));
                 this._boardDirty.push([i, j]);
+                this._markForbiddenSquares();
+
                 this._redrawBoard();
             }
         }
@@ -163,23 +163,37 @@ export class Game {
         this.container.addChild(square);
     }
 
-    private _markForbiddenSquares(i: number, j: number, newBoardMemberType: BoardMember): void {
-        const siblingSquares = [
-            [i - 1, j - 1],
-            [i - 1, j],
-            [i - 1, j + 1],
-            [i + 1, j],
-            [i + 1, j - 1],
-            [i, j - 1],
-            [i + 1, j + 1],
-            [i, j + 1],
-        ];
-        siblingSquares.forEach(([x, y]) => {
-            if (x >= 0 && x < Game.BOARD_SIZE && y >= 0 && y < Game.BOARD_SIZE && this._board.get(this._getIndexOfSquare(x, y)) !== BoardMember.SHIP){
-                this._board.set(this._getIndexOfSquare(x, y), newBoardMemberType === BoardMember.SHIP ? BoardMember.FORBIDDEN : BoardMember.EMPTY);
-                this._boardDirty.push([x, y]);
+    private _markForbiddenSquares(): void {
+        Array.from(this._board.entries()).forEach(([key, value]) => {
+            if (value === BoardMember.FORBIDDEN) {
+                this._board.set(key, BoardMember.EMPTY);
+                this._boardDirty.push(key.split('_').map(Number));
             }
-        });
+        })
+
+        Array.from(this._board.entries()).forEach(([key, value]) => {
+            if (value === BoardMember.SHIP) {
+                const [x, y] = key.split('_');
+                const i = Number(x);
+                const j = Number(y);
+                const siblingSquares = [
+                    [i - 1, j - 1],
+                    [i - 1, j],
+                    [i - 1, j + 1],
+                    [i + 1, j],
+                    [i + 1, j - 1],
+                    [i, j - 1],
+                    [i + 1, j + 1],
+                    [i, j + 1],
+                ];
+                siblingSquares.forEach(([x, y]) => {
+                    if (x >= 0 && x < Game.BOARD_SIZE && y >= 0 && y < Game.BOARD_SIZE && this._board.get(this._getIndexOfSquare(x, y)) !== BoardMember.SHIP){
+                        this._board.set(this._getIndexOfSquare(x, y), BoardMember.FORBIDDEN);
+                        this._boardDirty.push([x, y]);
+                    }
+                });
+            }
+        })
     }
 
     private _getSquareGraphicsContext({isHovered, squareType}): GraphicsContext {
@@ -207,6 +221,6 @@ export class Game {
     }
 
     _getIndexOfSquare(x: number, y: number): string {
-        return `x${x}y_${y}`;
+        return `${x}_${y}`;
     }
 }
