@@ -1,11 +1,11 @@
 import React from 'react';
-import './App.css';
-import {MyComponent} from "./Stage";
+import {hot } from 'react-hot-loader/root';
+import {GameComponent} from "./GameComponent";
 
 function App() {
     return (
-        <MyComponent/>
+        <GameComponent/>
     );
 }
 
-export default App;
+export default hot(App);
