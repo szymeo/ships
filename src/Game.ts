@@ -2,10 +2,15 @@ import {Application, Container, Graphics, GraphicsContext} from "pixi.js";
 import {switchCase} from "./utils";
 
 enum BoardMember {
-    EMPTY= 'empty',
+    EMPTY = 'empty',
     SHIP = 'ship',
     HIT = 'hit',
     FORBIDDEN = 'forbidden',
+}
+
+enum GamePhase {
+    PLACEMENT = 'placement',
+    BATTLE = 'battle',
 }
 
 export class Game {
@@ -17,9 +22,17 @@ export class Game {
     private static SQUARE_RADIUS = 6;
     private static SHIP_SIZE = 25;
 
+    private _gamePhase: GamePhase = GamePhase.PLACEMENT;
     private _graphicsContexts = {
         squareGraphicsContext: new GraphicsContext().roundRect(0, 0, Game.SQUARE_SIZE, Game.SQUARE_SIZE, Game.SQUARE_RADIUS).fill({color: 0x4b5563}),
-        forbiddenGraphicsContext: new GraphicsContext().roundRect(0, 0, Game.SQUARE_SIZE, Game.SQUARE_SIZE, Game.SQUARE_RADIUS).fill({color: 0x4b5563}),
+        forbiddenGraphicsContext: new GraphicsContext()
+            .roundRect(0, 0, Game.SQUARE_SIZE, Game.SQUARE_SIZE, Game.SQUARE_RADIUS)
+            .fill({color: 0x4b5563})
+            .moveTo(Game.SQUARE_SIZE / 3, Game.SQUARE_SIZE / 3)
+            .lineTo(Game.SQUARE_SIZE * 2 / 3, Game.SQUARE_SIZE * 2 / 3)
+            .moveTo(Game.SQUARE_SIZE * 2 / 3, Game.SQUARE_SIZE / 3)
+            .lineTo(Game.SQUARE_SIZE / 3, Game.SQUARE_SIZE * 2 / 3)
+            .stroke({width: 2, color: 0x111111}),
         hoveredForbiddenGraphicsContext: new GraphicsContext().roundRect(0, 0, Game.SQUARE_SIZE, Game.SQUARE_SIZE, Game.SQUARE_RADIUS).fill({color: 0x4b5563}),
         shipSquareGraphicsContext: new GraphicsContext()
             .roundRect(0, 0, Game.SQUARE_SIZE, Game.SQUARE_SIZE, Game.SQUARE_RADIUS)
@@ -99,11 +112,15 @@ export class Game {
         }
         square.onpointermove = () => {
             if (this._isPointerDown && !this._changedSquares.has(this._getIndexOfSquare(i, j))) {
-                this._changedSquares.add(this._getIndexOfSquare(i, j));
-                this._board.set(this._getIndexOfSquare(i, j), switchCase({
+                const newBoardMemberType = switchCase({
                     [BoardMember.EMPTY]: BoardMember.SHIP,
                     [BoardMember.SHIP]: BoardMember.EMPTY,
-                })(this._board.get(this._getIndexOfSquare(i, j))));
+                    [BoardMember.FORBIDDEN]: BoardMember.SHIP,
+                })(this._board.get(this._getIndexOfSquare(i, j)));
+
+                this._changedSquares.add(this._getIndexOfSquare(i, j));
+                this._board.set(this._getIndexOfSquare(i, j), newBoardMemberType);
+                this._markForbiddenSquares(i, j, newBoardMemberType);
                 this._boardDirty.push([i, j]);
                 this._redrawBoard();
             }
@@ -125,12 +142,18 @@ export class Game {
         }
         square.onclick = () => {
             if (!this._changedSquares.has(this._getIndexOfSquare(i, j))) {
-                this._board.set(this._getIndexOfSquare(i, j), switchCase({
+                console.log(`Clicked on square [${i}, ${j}]`);
+
+                const oldBoardMemberType = this._board.get(this._getIndexOfSquare(i, j));
+                const newBoardMemberType = switchCase({
                     [BoardMember.EMPTY]: BoardMember.SHIP,
                     [BoardMember.SHIP]: BoardMember.EMPTY,
-                })(this._board.get(this._getIndexOfSquare(i, j))));
+                    [BoardMember.FORBIDDEN]: BoardMember.SHIP,
+                })(oldBoardMemberType);
+                this._markForbiddenSquares(i, j, newBoardMemberType);
+
+                this._board.set(this._getIndexOfSquare(i, j), newBoardMemberType);
                 this._changedSquares.add(this._getIndexOfSquare(i, j));
-                console.log(`Clicked on square [${i}, ${j}]`);
                 this._boardDirty.push([i, j]);
                 this._redrawBoard();
             }
@@ -140,12 +163,33 @@ export class Game {
         this.container.addChild(square);
     }
 
+    private _markForbiddenSquares(i: number, j: number, newBoardMemberType: BoardMember): void {
+        const siblingSquares = [
+            [i - 1, j - 1],
+            [i - 1, j],
+            [i - 1, j + 1],
+            [i + 1, j],
+            [i + 1, j - 1],
+            [i, j - 1],
+            [i + 1, j + 1],
+            [i, j + 1],
+        ];
+        siblingSquares.forEach(([x, y]) => {
+            if (x >= 0 && x < Game.BOARD_SIZE && y >= 0 && y < Game.BOARD_SIZE && this._board.get(this._getIndexOfSquare(x, y)) !== BoardMember.SHIP){
+                this._board.set(this._getIndexOfSquare(x, y), newBoardMemberType === BoardMember.SHIP ? BoardMember.FORBIDDEN : BoardMember.EMPTY);
+                this._boardDirty.push([x, y]);
+            }
+        });
+    }
+
     private _getSquareGraphicsContext({isHovered, squareType}): GraphicsContext {
         switch (squareType) {
             case BoardMember.SHIP:
                 return isHovered ? this._graphicsContexts.hoveredShipSquareGraphicsContext : this._graphicsContexts.shipSquareGraphicsContext;
             case BoardMember.HIT:
                 return this._graphicsContexts.hitSquareGraphicsContext;
+            case BoardMember.FORBIDDEN:
+                return this._graphicsContexts.forbiddenGraphicsContext;
             default:
                 return isHovered ? this._graphicsContexts.hoveredSquareGraphicsContext : this._graphicsContexts.squareGraphicsContext;
         }

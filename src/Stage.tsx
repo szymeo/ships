@@ -14,7 +14,7 @@ export const MyComponent = () => {
         });
 
         // Intialize the application.
-        await app.init({ background: '#1f2937', resizeTo: window });
+        await app.init({ background: '#1f2937', resizeTo: window, antialias: true, clearBeforeRender: true });
 
         stageRef.current.appendChild(app.canvas);
         app.stage.addChild(boardContainer);
