@@ -2,6 +2,12 @@ import {Container, Graphics, GraphicsContext, Text} from "pixi.js";
 import {BoardMember, BoardOptions, BoardStage} from "./models";
 import {switchCase} from "./utils";
 
+function calculateDistance(x1: number, y1: number, x2: number, y2: number): number {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
 export class Board {
     private readonly boardContainer = new Container();
 
@@ -25,6 +31,7 @@ export class Board {
     private _board: Map<string, BoardMember> = new Map();
     private _boardCellsGraphics: Map<string, Graphics> = new Map();
     private _isPointerDown = false;
+    private _pointerDownCoords: { x: number, y: number };
     private _boardDirty: number[][] = [];
     private _hoveredSquares: Set<string> = new Set();
     private _changedSquares: Set<string> = new Set();
@@ -151,12 +158,18 @@ export class Board {
             this._boardDirty.push([i, j]);
             this.redrawBoard();
         }
-        square.onpointermove = () => {
-            if (this.isDisabled) {
+        square.onpointermove = (event) => {
+            if (this.isDisabled || !this._isPointerDown) {
                 return;
             }
 
-            if (this._isPointerDown && !this._changedSquares.has(this.getIndexOfSquare(i, j))) {
+            const mouseDistance = calculateDistance(event.global.x, event.global.y, this._pointerDownCoords.x, this._pointerDownCoords.y);
+
+            if (mouseDistance < 5) {
+                return;
+            }
+
+            if (!this._changedSquares.has(this.getIndexOfSquare(i, j))) {
                 const newBoardMemberType = switchCase({
                     ...(this.isPlacing) && {
                         [BoardMember.EMPTY]: BoardMember.SHIP,
@@ -169,7 +182,11 @@ export class Board {
                 this._changedSquares.add(this.getIndexOfSquare(i, j));
                 this._board.set(this.getIndexOfSquare(i, j), newBoardMemberType);
                 this._boardDirty.push([i, j]);
-                this.markForbiddenSquares();
+
+                if (this.isPlacing) {
+                    this.markForbiddenSquares();
+                }
+
                 this.redrawBoard();
             }
         }
@@ -183,12 +200,16 @@ export class Board {
             this._boardDirty.push([i, j]);
             this.redrawBoard();
         }
-        square.onpointerdown = () => {
+        square.onpointerdown = (event) => {
             if (this.isDisabled) {
                 return;
             }
 
             this._isPointerDown = true;
+            this._pointerDownCoords = {
+                x: event.global.x,
+                y: event.global.y,
+            };
         }
         square.onpointerup = () => {
             if (this.isDisabled) {
