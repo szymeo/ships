@@ -26,7 +26,7 @@ export class GameRecordsStorage extends Dexie {
         super('com.szymeo.ships-game');
 
         this.version(1).stores({
-            reports: '++id, createdAt'
+            records: '++id, createdAt'
         });
     }
 
