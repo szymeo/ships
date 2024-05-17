@@ -54,8 +54,9 @@ export class Game {
     }
 
     static startBattle(): void {
-        this._instance._myBoard.setMarkingStage();
-        this._instance._opponentBoard.setMarkingStage();
+        this._instance._myBoard.init();
+        this._instance._myBoard.setPlacementStage();
+        this._instance._opponentBoard.init();
     }
 
     static endBattle(): void {

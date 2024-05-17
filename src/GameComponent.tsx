@@ -1,4 +1,4 @@
-import {Application, Container} from 'pixi.js';
+import {Application, Assets, Container} from 'pixi.js';
 import {useEffect, useRef, useState} from 'react';
 import {Game} from "./Game";
 import {GameRecordsStorage} from "./GameRecordsStorage";
@@ -28,7 +28,7 @@ export const GameComponent = () => {
     }, []);
 
     return (
-        <div className='w-[100vw] h-[100dvh] overflow-hidden flex items-start justify-center bg-gray-800 select-none'>
+        <div className='w-[100vw] h-[100dvh] overflow-hidden flex items-start justify-center bg-gray-800 select-none font-default'>
             <div className='w-full' ref={stageRef}/>
 
             <div className="absolute top-5 right-5 text-white bg-gray-700 rounded-3xl p-8 flex flex-col items-center justify-center">

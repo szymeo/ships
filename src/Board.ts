@@ -40,6 +40,13 @@ export class Board {
         private readonly container: Container,
         options: Partial<BoardOptions> = {},
     ) {
+        document.addEventListener('pointerup', () => {
+            this._isPointerDown = false;
+            this._pointerDownCoords = null;
+            setTimeout(() => {
+                this._changedSquares.clear();
+            }, 100)
+        });
         this._options = {...this._options, ...options};
         this._generateTextures();
         this.container.addChild(this.boardContainer);
@@ -64,6 +71,13 @@ export class Board {
         return this._stage === BoardStage.MARKING;
     }
 
+    init(): void {
+        this.reset();
+        this.setDisabledStage();
+        this.createEmptyBoard();
+        this.redrawBoard();
+    }
+
     setPlacementStage(): void {
         this._stage = BoardStage.PLACEMENT;
     }
@@ -76,6 +90,23 @@ export class Board {
         this._stage = BoardStage.DISABLED;
     }
 
+    setDisabledStage(): void {
+        this._stage = BoardStage.DISABLED;
+    }
+
+    reset(): void {
+        this._board.clear();
+        this._boardCellsGraphics.forEach((square) => {
+            square.destroy();
+            this.boardContainer.removeChild(square);
+        });
+        this._boardCellsGraphics.clear();
+        this._boardDirty = [];
+        this._hoveredSquares.clear();
+        this._changedSquares.clear();
+        this.container.removeChildren();
+    }
+
     drawBoardLetters(): void {
         const boardLetters = 'ABCDOLMXVZ';
 
@@ -85,6 +116,7 @@ export class Board {
                 style: {
                     fontSize: 20,
                     fill: 0xffffff,
+                    fontFamily: 'PoetsenOne'
                 },
                 x: i * (this._options.SQUARE_SIZE + this._options.GRID_GAP) + this._options.SQUARE_SIZE / 2 - 5,
                 y: -30,
@@ -99,6 +131,7 @@ export class Board {
                 style: {
                     fontSize: 20,
                     fill: 0xffffff,
+                    fontFamily: 'PoetsenOne'
                 },
                 x: -30,
                 y: i * (this._options.SQUARE_SIZE + this._options.GRID_GAP) + this._options.SQUARE_SIZE / 2 - 10,
