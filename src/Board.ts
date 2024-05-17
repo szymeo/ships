@@ -76,6 +76,7 @@ export class Board {
         this.setDisabledStage();
         this.createEmptyBoard();
         this.redrawBoard();
+        this.drawBoardLetters();
     }
 
     setPlacementStage(): void {
@@ -96,15 +97,11 @@ export class Board {
 
     reset(): void {
         this._board.clear();
-        this._boardCellsGraphics.forEach((square) => {
-            square.destroy();
-            this.boardContainer.removeChild(square);
-        });
         this._boardCellsGraphics.clear();
         this._boardDirty = [];
         this._hoveredSquares.clear();
         this._changedSquares.clear();
-        this.container.removeChildren();
+        this.boardContainer.removeChildren();
     }
 
     drawBoardLetters(): void {

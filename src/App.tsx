@@ -4,7 +4,15 @@ import {GameComponent} from "./GameComponent";
 
 function App() {
     return (
-        <GameComponent/>
+        <div className='font-default'>
+            <GameComponent/>
+
+            <div className="fixed bottom-5 right-5 text-white">
+                <a href="https://github.com/szymeo/ships" target='_blank'>
+                    Github Repository ↗️
+                </a>
+            </div>
+        </div>
     );
 }
 

@@ -31,10 +31,10 @@ export class Game {
         this._myBoard.setPlacementStage();
         this._opponentBoard = new Board(this._opponentBoardContainer, {
             BOARD_SIZE,
-            SQUARE_SIZE: SQUARE_SIZE / 1.5,
+            SQUARE_SIZE: SQUARE_SIZE,
             GRID_GAP: GRID_GAP,
             SQUARE_RADIUS: SQUARE_RADIUS,
-            SHIP_SIZE: SHIP_SIZE / 1.5,
+            SHIP_SIZE: SHIP_SIZE,
             MARKING_MAP: {
                 [BoardMember.EMPTY]: BoardMember.HIT,
                 [BoardMember.HIT]: BoardMember.HIT_SHIP,
@@ -53,10 +53,15 @@ export class Game {
         this._instance = new Game(container);
     }
 
-    static startBattle(): void {
+    static startNewGame(): void {
         this._instance._myBoard.init();
         this._instance._myBoard.setPlacementStage();
         this._instance._opponentBoard.init();
+    }
+
+    static startBattle(): void {
+        this._instance._myBoard.setMarkingStage();
+        this._instance._opponentBoard.setMarkingStage();
     }
 
     static endBattle(): void {
