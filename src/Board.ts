@@ -24,7 +24,8 @@ export class Board {
             [BoardMember.HIT_SHIP]: BoardMember.SHIP,
             [BoardMember.FORBIDDEN]: BoardMember.HIT_FORBIDDEN,
             [BoardMember.HIT_FORBIDDEN]: BoardMember.FORBIDDEN,
-        }
+        },
+        TITLE: 'Board',
     }
     private _stage: BoardStage = BoardStage.DISABLED;
     private _graphicsContexts: Record<string, GraphicsContext> = {};
@@ -137,6 +138,17 @@ export class Board {
             this.boardContainer.addChild(letter);
         }
 
+        const title = new Text({
+            text: this._options.TITLE,
+            style: {
+                fontSize: 20,
+                fill: 0xffffff,
+                fontFamily: 'PoetsenOne'
+            },
+            x: this._options.BOARD_SIZE * (this._options.SQUARE_SIZE + this._options.GRID_GAP) / 2 - 50,
+            y: this._options.BOARD_SIZE * (this._options.SQUARE_SIZE + this._options.GRID_GAP) + 20,
+        });
+        this.boardContainer.addChild(title);
     }
 
     redrawBoard(): void {

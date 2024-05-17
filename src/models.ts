@@ -14,6 +14,7 @@ export type BoardOptions = {
     SQUARE_RADIUS: number;
     SHIP_SIZE: number;
     MARKING_MAP: Partial<Record<BoardMember, BoardMember>>;
+    TITLE?: string;
 }
 
 export enum BoardStage {

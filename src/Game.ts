@@ -27,6 +27,7 @@ export class Game {
             GRID_GAP,
             SQUARE_RADIUS,
             SHIP_SIZE,
+            TITLE: 'My board',
         })
         this._myBoard.setPlacementStage();
         this._opponentBoard = new Board(this._opponentBoardContainer, {
@@ -39,7 +40,8 @@ export class Game {
                 [BoardMember.EMPTY]: BoardMember.HIT,
                 [BoardMember.HIT]: BoardMember.HIT_SHIP,
                 [BoardMember.HIT_SHIP]: BoardMember.EMPTY,
-            }
+            },
+            TITLE: 'Opponent\'s board',
         });
 
         this._myBoardContainer.x = 60;
