@@ -1,6 +1,7 @@
 import {Application, Container} from 'pixi.js';
 import {useEffect, useRef, useState} from 'react';
 import {Game} from "./Game";
+import {GameRecordsStorage} from "./GameRecordsStorage";
 
 export const GameComponent = () => {
     const [isBattleStarted, setIsBattleStarted] = useState(false);
@@ -17,6 +18,7 @@ export const GameComponent = () => {
         app.stage.addChild(boardContainer);
 
         Game.init(boardContainer);
+        GameRecordsStorage.init();
     }
 
     useEffect(() => {
@@ -48,11 +50,11 @@ export const GameComponent = () => {
                     <button
                         onClick={() => {
                             setIsBattleStarted(false);
-                            // Game.endBattle();
+                            Game.endBattle();
                         }}
                         className='px-6 rounded-2xl py-3 font-semibold text-2xl bg-gradient-to-r from-red-500 to-yellow-500 text-white hover:from-yellow-500 hover:to-red-500 active:from-yellow-700 active:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50 transition-all duration-300 ease-in-out shadow-lg'
                     >
-                        New battle
+                        Finish
                     </button>
                 )}
             </div>

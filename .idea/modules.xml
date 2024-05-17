@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ships.iml" filepath="$PROJECT_DIR$/.idea/ships.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../spendingo/app.spendingo/.idea/v-finanalyze.iml" filepath="$PROJECT_DIR$/../../spendingo/app.spendingo/.idea/v-finanalyze.iml" />
     </modules>
   </component>
 </project>
