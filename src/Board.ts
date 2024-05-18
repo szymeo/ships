@@ -39,7 +39,7 @@ export class Board {
     private _cellLocatorText: Text = new Text({
         text: '',
         style: {
-            fontSize: 20,
+            fontSize: 26,
             fill: 0xffffff,
             fontFamily: 'PoetsenOne'
         },
@@ -221,8 +221,8 @@ export class Board {
             }
 
             this._cellLocatorText.text = `${'ABCDOLMXVZ'[i]}${j + 1}`;
-            this._cellLocatorText.x = -10 - (this._cellLocatorText.text.length * 10);
-            this._cellLocatorText.y = -30;
+            this._cellLocatorText.x = -20 - (this._cellLocatorText.text.length * 10);
+            this._cellLocatorText.y = -40;
 
             if(!this._isPointerDown) {
                 return;
