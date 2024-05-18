@@ -7,6 +7,7 @@ module.exports = {
         extend: {
             fontFamily: {
                 'default': ['PoetsenOne', 'sans-serif'],
+                'mono': ['RedditMono', 'monospace'],
             }
         },
     },

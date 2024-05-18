@@ -36,6 +36,16 @@ export class Board {
     private _boardDirty: number[][] = [];
     private _hoveredSquares: Set<string> = new Set();
     private _changedSquares: Set<string> = new Set();
+    private _cellLocatorText: Text = new Text({
+        text: '',
+        style: {
+            fontSize: 20,
+            fill: 0xffffff,
+            fontFamily: 'RedditMono'
+        },
+        x: 0,
+        y: 0,
+    });
 
     constructor(
         private readonly container: Container,
@@ -51,6 +61,11 @@ export class Board {
         this._options = {...this._options, ...options};
         this._generateTextures();
         this.container.addChild(this.boardContainer);
+        this.container.addChild(this._cellLocatorText);
+        this.boardContainer.eventMode = 'static';
+        this.boardContainer.on('pointerout', () => {
+            this._cellLocatorText.text = '';
+        });
         this.createEmptyBoard();
         this.redrawBoard();
         this.drawBoardLetters();
@@ -114,7 +129,7 @@ export class Board {
                 style: {
                     fontSize: 20,
                     fill: 0xffffff,
-                    fontFamily: 'PoetsenOne'
+                    fontFamily: 'RedditMono'
                 },
                 x: i * (this._options.SQUARE_SIZE + this._options.GRID_GAP) + this._options.SQUARE_SIZE / 2 - 5,
                 y: -30,
@@ -129,7 +144,7 @@ export class Board {
                 style: {
                     fontSize: 20,
                     fill: 0xffffff,
-                    fontFamily: 'PoetsenOne'
+                    fontFamily: 'RedditMono'
                 },
                 x: -30,
                 y: i * (this._options.SQUARE_SIZE + this._options.GRID_GAP) + this._options.SQUARE_SIZE / 2 - 10,
@@ -201,7 +216,15 @@ export class Board {
             this.redrawBoard();
         }
         square.onpointermove = (event) => {
-            if (this.isDisabled || !this._isPointerDown) {
+            if (this.isDisabled) {
+                return;
+            }
+
+            this._cellLocatorText.text = `${'ABCDOLMXVZ'[i]}${j + 1}`;
+            this._cellLocatorText.x = -10 - (this._cellLocatorText.text.length * 10);
+            this._cellLocatorText.y = -30;
+
+            if(!this._isPointerDown) {
                 return;
             }
 

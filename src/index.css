@@ -7,6 +7,12 @@
     src: url('../public/fonts/PoetsenOne-Regular.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'RedditMono';
+    font-weight: 600;
+    src: url('../public/fonts/RedditMono-SemiBold.ttf') format('truetype');
+}
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
