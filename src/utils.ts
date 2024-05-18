@@ -1,4 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
+import {twMerge} from 'tw-merge';
+import {ClassValue, clsx} from 'clsx';
 
 export function uuid() {
     return uuidV4();
@@ -23,7 +25,9 @@ export const getRandomHex = (size: number): string => {
     return result.join('');
 };
 
-
+export const cls = (...classes: ClassValue[]): string => {
+    return twMerge(clsx(...classes));
+}
 
 export const capitalize = (str: string) => {
     if (!str) {

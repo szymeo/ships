@@ -4,10 +4,10 @@ import {GameComponent} from "./GameComponent";
 
 function App() {
     return (
-        <div className='font-default'>
+        <div className='font-default overflow-hidden'>
             <GameComponent/>
 
-            <div className="fixed bottom-5 right-5 text-white">
+            <div className="fixed bottom-5 left-5 text-white">
                 <a href="https://github.com/szymeo/ships" target='_blank'>
                     Github Repository ↗️
                 </a>

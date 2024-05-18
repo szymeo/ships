@@ -34,7 +34,7 @@ export class GameRecordsStorage extends Dexie {
         this._instance = new GameRecordsStorage();
     }
 
-    static getReports(): PromiseExtended<WithId<GameRecord>[]> {
+    static getRecords(): PromiseExtended<WithId<GameRecord>[]> {
         return this._instance.records.toArray();
     }
 

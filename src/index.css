@@ -22,7 +22,17 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+body, html {
+    overflow: hidden;
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@layer components {
+    .icon-btn {
+        @apply rounded-lg text-xl text-center w-8 h-8 transition-all;
+    }
 }
