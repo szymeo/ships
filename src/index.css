@@ -18,6 +18,10 @@ body, html {
 }
 
 @layer components {
+    .btn {
+        @apply rounded-lg h-fit w-fit text-sm px-2.5 py-1 transition-all;
+    }
+
     .icon-btn {
         @apply rounded-lg text-xl text-center w-8 h-8 transition-all;
     }

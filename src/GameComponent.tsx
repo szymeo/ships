@@ -11,9 +11,12 @@ enum GameStatus {
     FINISHED = 'FINISHED',
 }
 
+const DEFAULT_ALGORITHM_CODE = `// variable "arguments" is available here\n// you can use it to create your own AI algorithm\n// have fun =)\n\nconsole.log(arguments[0]);`;
+
 export const GameComponent = () => {
     const [gameStatus, setGameStatus] = useState(GameStatus.PREPARING);
-    const [algorithmCode, setAlgorithmCode] = useState<string>('// variable "arguments" is available here\n// you can use it to create your own AI algorithm\n// have fun =)\n\nconsole.log(arguments[0]);');
+    const savedAlgorithmCode = localStorage.getItem('szymeo.ships-algorithmCode');
+    const [algorithmCode, setAlgorithmCode] = useState<string>(savedAlgorithmCode ?? DEFAULT_ALGORITHM_CODE);
     const [codeEditorOpen, setCodeEditorOpen] = useState<boolean>(false);
 
     const stageRef = useRef<HTMLDivElement>();
@@ -68,26 +71,26 @@ export const GameComponent = () => {
                                         func.call(null, records);
                                     })
                                 }}
-                                className='icon-btn active:scale-90 text-white hover:text-gray-300 transition-all duration-300 ease-in-out'
+                                className='btn bg-green-600 active:scale-75 text-white hover:text-gray-300 transition-transform duration-300 ease-in-out'
                             >
-                                ▶
+                                Run ▶
                             </button>
 
                             <button
                                 title="Close code editor"
                                 onClick={() => setCodeEditorOpen(false)}
-                                className='icon-btn active:scale-90 text-white hover:text-gray-300 transition-all duration-300 ease-in-out'
+                                className='btn active:scale-75 text-white hover:text-gray-300 transition-all duration-300 ease-in-out'
                             >
-                                ❌
+                                Close ❌
                             </button>
                         </>
                     ) : (
                         <button
                             title="Open code editor"
                             onClick={() => setCodeEditorOpen(v => !v)}
-                            className='icon-btn active:scale-90 text-white hover:text-gray-300 transition-all duration-300 ease-in-out'
+                            className='btn active:scale-75 text-white hover:text-gray-300 transition-transform duration-300 ease-in-out'
                         >
-                            📝
+                            Open code editor
                         </button>
                     )}
                 </div>
@@ -142,7 +145,10 @@ export const GameComponent = () => {
                 })}>
                     <Editor
                         value={algorithmCode}
-                        onChange={setAlgorithmCode}
+                        onChange={(value) => {
+                            setAlgorithmCode(value);
+                            localStorage.setItem('szymeo.ships-algorithmCode', value);
+                        }}
                         height="100%"
                         width='100%'
                         theme='vs-dark'
