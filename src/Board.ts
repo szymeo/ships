@@ -413,7 +413,7 @@ export class Board {
                 .fill({color: 0xf59e0b}),
             hitSquareGraphicsContext: new GraphicsContext()
                 .roundRect(0, 0, this._options.SQUARE_SIZE, this._options.SQUARE_SIZE, this._options.SQUARE_RADIUS)
-                .fill({color: 0x4b5563})
+                .fill({color: 0x1f2937})
                 .moveTo(this._options.SQUARE_SIZE / 3, this._options.SQUARE_SIZE / 3)
                 .lineTo(this._options.SQUARE_SIZE * 2 / 3, this._options.SQUARE_SIZE * 2 / 3)
                 .moveTo(this._options.SQUARE_SIZE * 2 / 3, this._options.SQUARE_SIZE / 3)

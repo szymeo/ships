@@ -41,7 +41,7 @@ export class GameRecordsStorage extends Dexie {
     static addRecord(dto: AddRecordDTO) {
         return this._instance.records.add({
             data: dto.data,
-            createdAt: DateTime.now().toISODate(),
+            createdAt: DateTime.now().toISO()
         } as WithId<GameRecord>);
     }
 
