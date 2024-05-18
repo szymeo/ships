@@ -41,7 +41,7 @@ export class Board {
         style: {
             fontSize: 20,
             fill: 0xffffff,
-            fontFamily: 'RedditMono'
+            fontFamily: 'PoetsenOne'
         },
         x: 0,
         y: 0,
@@ -129,7 +129,7 @@ export class Board {
                 style: {
                     fontSize: 20,
                     fill: 0xffffff,
-                    fontFamily: 'RedditMono'
+                    fontFamily: 'PoetsenOne'
                 },
                 x: i * (this._options.SQUARE_SIZE + this._options.GRID_GAP) + this._options.SQUARE_SIZE / 2 - 5,
                 y: -30,
@@ -144,7 +144,7 @@ export class Board {
                 style: {
                     fontSize: 20,
                     fill: 0xffffff,
-                    fontFamily: 'RedditMono'
+                    fontFamily: 'PoetsenOne'
                 },
                 x: -30,
                 y: i * (this._options.SQUARE_SIZE + this._options.GRID_GAP) + this._options.SQUARE_SIZE / 2 - 10,
